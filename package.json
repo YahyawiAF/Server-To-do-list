@@ -1,0 +1,19 @@
+{
+  "name": "server-to-do-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YahyawiAF/Server-To-do-list.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YahyawiAF/Server-To-do-list/issues"
+  },
+  "homepage": "https://github.com/YahyawiAF/Server-To-do-list#readme"
+}
