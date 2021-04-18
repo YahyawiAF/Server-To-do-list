@@ -1,6 +1,23 @@
-import { Resolver, Query, Arg, Mutation } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Arg,
+  Mutation,
+  ObjectType,
+  Field,
+  Ctx,
+} from "type-graphql";
 import { User } from "./entity/User";
 import { hash, compare } from "bcryptjs";
+import { createAccessToken, createRefreshToken } from "./auth";
+import { MyContext } from "./MyContext";
+import { sendRefreshToken } from "./sendRefreshToken";
+
+@ObjectType()
+class LoginResponse {
+  @Field()
+  accessToken: string;
+}
 
 @Resolver()
 export class UserResolver {
@@ -14,10 +31,13 @@ export class UserResolver {
     return User.find();
   }
 
-  @Mutation(() => Boolean)
-  async login(@Arg("email") email: string, @Arg("password") password: string) {
+  @Mutation(() => LoginResponse)
+  async login(
+    @Arg("email") email: string,
+    @Arg("password") password: string,
+    @Ctx() { res }: MyContext
+  ): Promise<LoginResponse> {
     const user = await User.findOne({ email });
-    console.log("user", user);
     if (!user) {
       throw new Error("could not find user");
     }
@@ -26,7 +46,11 @@ export class UserResolver {
       throw new Error("bad password");
     }
 
-    return true;
+    sendRefreshToken(res, createRefreshToken(user));
+
+    return {
+      accessToken: createAccessToken(user),
+    };
   }
 
   @Mutation(() => Boolean)
