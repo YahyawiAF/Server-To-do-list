@@ -1,7 +1,7 @@
 import { Response } from "express";
 
 export const sendRefreshToken = (res: Response, token: string) => {
-  res.cookie("jid", token, {
+  res.cookie("quid", token, {
     httpOnly: true,
     path: "/refresh_token",
   });
