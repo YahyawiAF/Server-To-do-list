@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
@@ -9,11 +10,12 @@ import { buildSchema } from "type-graphql";
 (async () => {
   const app = express();
   app.get("/", (_req, res) => res.send("hello"));
-  await createConnection()
+  await createConnection();
   const appoloServer = new ApolloServer({
     schema: await buildSchema({
-        resolvers: [UserResolver]
+      resolvers: [UserResolver],
     }),
+    context: ({ req, res }) => ({ req, res }),
   });
   appoloServer.applyMiddleware({ app });
   app.listen(4000, () => {
@@ -27,6 +29,7 @@ import { buildSchema } from "type-graphql";
 //     const std = new ToDo();
 //     std.Title = "ToDo 1";
 //     std.Description = "Clean the house";
+//     std.Email = "qsd@qsd.fr"
 //     await connection.manager.save(std);
 //     console.log("Saved a new user with id: " + std.id);
 
