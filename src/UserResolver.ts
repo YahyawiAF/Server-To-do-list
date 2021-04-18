@@ -1,6 +1,6 @@
 import { Resolver, Query, Arg, Mutation } from "type-graphql";
 import { User } from "./entity/User";
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
 
 @Resolver()
 export class UserResolver {
@@ -12,6 +12,21 @@ export class UserResolver {
   @Query(() => [User])
   users() {
     return User.find();
+  }
+
+  @Mutation(() => Boolean)
+  async login(@Arg("email") email: string, @Arg("password") password: string) {
+    const user = await User.findOne({ email });
+    console.log("user", user);
+    if (!user) {
+      throw new Error("could not find user");
+    }
+    const valid = await compare(password, user.password);
+    if (!valid) {
+      throw new Error("bad password");
+    }
+
+    return true;
   }
 
   @Mutation(() => Boolean)
