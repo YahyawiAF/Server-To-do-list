@@ -16,11 +16,11 @@ export class ToDo extends BaseEntity {
   @Field(() => ID)
   id: ObjectID;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   Title: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column()
   Description: string;
 
