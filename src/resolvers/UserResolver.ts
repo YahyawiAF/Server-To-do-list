@@ -8,17 +8,19 @@ import {
   Ctx,
   UseMiddleware,
 } from "type-graphql";
-import { User } from "./entity/User";
+import { User } from "../entity/User";
 import { hash, compare } from "bcryptjs";
-import { createAccessToken, createRefreshToken } from "./auth";
-import { MyContext } from "./MyContext";
-import { sendRefreshToken } from "./sendRefreshToken";
-import { isAuth } from "./isAuth";
+import { createAccessToken, createRefreshToken } from "../auth";
+import { MyContext } from "../MyContext";
+import { sendRefreshToken } from "../sendRefreshToken";
+import { isAuth } from "../isAuth";
 
 @ObjectType()
 class LoginResponse {
   @Field()
   accessToken: string;
+  @Field(() => User)
+  user: User;
 }
 
 @Resolver()
@@ -40,7 +42,7 @@ export class UserResolver {
     @Arg("password") password: string,
     @Ctx() { res }: MyContext
   ): Promise<LoginResponse> {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       throw new Error("could not find user");
     }
@@ -48,11 +50,10 @@ export class UserResolver {
     if (!valid) {
       throw new Error("bad password");
     }
-
     sendRefreshToken(res, createRefreshToken(user));
-
     return {
       accessToken: createAccessToken(user),
+      user,
     };
   }
 
