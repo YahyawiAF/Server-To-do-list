@@ -67,14 +67,29 @@ export class ToDoResolver {
 
   @Mutation(() => ToDo)
   @UseMiddleware(isAuth)
+  async updateIsCompleted(
+    @Arg("id") id: string,
+    @Arg("isCompleted") isCompleted: boolean
+  ): Promise<CreateTodoInput> {
+    const todoRepository = getRepository(ToDo);
+    const todo = await todoRepository.findOne(id);
+    if (!todo) {
+      throw new Error("todo not found");
+    }
+    todo.IsCompleted = isCompleted;
+    await todoRepository.save(todo);
+    return todo;
+  }
+
+  @Mutation(() => ToDo)
+  @UseMiddleware(isAuth)
   async deleteToDo(@Arg("id") id: string): Promise<CreateTodoInput> {
     const todoRepository = getRepository(ToDo);
     const todo = await todoRepository.findOne(id);
     if (!todo) {
       throw new Error("todo not found");
     }
-    const c = await todoRepository.delete(id);
-    console.log("c", c);
+    await todoRepository.delete(id);
     return todo;
   }
 }
