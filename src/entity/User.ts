@@ -4,15 +4,16 @@ import {
   Column,
   BaseEntity,
   ObjectIdColumn,
-  OneToMany,
+  PrimaryGeneratedColumn,
 } from "typeorm";
-import { ObjectType, Field } from "type-graphql";
-import { ToDo } from "./ToDo";
+import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType()
-@Entity("users")
+@Entity()
 export class User extends BaseEntity {
+  @PrimaryGeneratedColumn("uuid")
   @ObjectIdColumn()
+  @Field(() => ID)
   id: ObjectID;
 
   @Field()
@@ -23,9 +24,9 @@ export class User extends BaseEntity {
   @Column("text")
   password: string;
 
-  @OneToMany(() => ToDo, (todo: ToDo) => todo.user, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-  })
-  todos: Array<ToDo>;
+  // @OneToMany(() => ToDo, (todo: ToDo) => todo.user, {
+  //   onDelete: "CASCADE",
+  //   onUpdate: "CASCADE",
+  // })
+  // todos: Promise<ToDo[]>;
 }

@@ -3,8 +3,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
-// import { ToDo } from "./entity/ToDo";
-import { UserResolver } from "./resolvers/UserResolver";
+import { UserResolver, ToDoResolver } from "./resolvers";
 import { buildSchema } from "type-graphql";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
@@ -40,7 +39,7 @@ import { createAccessToken, createRefreshToken } from "./auth";
   await createConnection();
   const appoloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, ToDoResolver],
     }),
     context: ({ req, res }) => ({ req, res }),
   });

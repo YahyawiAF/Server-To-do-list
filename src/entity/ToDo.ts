@@ -4,16 +4,16 @@ import {
   ObjectIdColumn,
   Column,
   BaseEntity,
-  ManyToOne,
-  JoinColumn,
+  PrimaryGeneratedColumn,
 } from "typeorm";
-import { ObjectType, Field } from "type-graphql";
-import { User } from "./User";
+import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType()
-@Entity("todos")
+@Entity()
 export class ToDo extends BaseEntity {
+  @PrimaryGeneratedColumn("uuid")
   @ObjectIdColumn()
+  @Field(() => ID)
   id: ObjectID;
 
   @Field()
@@ -24,7 +24,11 @@ export class ToDo extends BaseEntity {
   @Column()
   Description: string;
 
-  @ManyToOne(() => User, (user: User) => user.todos)
-  @JoinColumn({ name: "user_email" })
-  user: string;
+  @Field({ nullable: true })
+  @Column()
+  Creator: string;
+
+  @Field(() => Boolean, { nullable: true })
+  @Column()
+  IsCompleted: boolean;
 }
