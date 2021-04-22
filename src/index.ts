@@ -37,20 +37,19 @@ import { createAccessToken, createRefreshToken } from "./auth";
     return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
 
-  let retries = 5 
-  while(retries){
+  let retries = 5;
+  while (retries) {
     try {
       await createConnection();
       break;
-    } catch(err) {
-      console.log(err)
-      retries -= 1
-      console.log(`retries left: ${retries}`)
-      await new Promise(res => setTimeout(res, 5000
-        ))
+    } catch (err) {
+      console.log(err);
+      retries -= 1;
+      console.log(`retries left: ${retries}`);
+      // wait 5 seconds
+      await new Promise((res) => setTimeout(res, 5000));
     }
   }
-
 
   const appoloServer = new ApolloServer({
     schema: await buildSchema({
