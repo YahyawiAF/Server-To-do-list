@@ -77,7 +77,8 @@ export class ToDoResolver {
     if (!todo) {
       throw new Error("todo not found");
     }
-    todo.comment = [new Comments(comment, payload.userEmail)];
+    let prevComment = todo.comment ? todo.comment : [];
+    todo.comment = [...prevComment, new Comments(comment, payload.userEmail)];
     await todo.save();
     return todo;
   }
