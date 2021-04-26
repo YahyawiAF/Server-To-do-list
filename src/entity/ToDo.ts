@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
+import { Comments } from "./Comments";
 
 @ObjectType()
 @Entity()
@@ -29,6 +30,14 @@ export class ToDo extends BaseEntity {
   Creator: string;
 
   @Field(() => Boolean, { nullable: true })
-  @Column()
+  @Column({ default: false })
   IsCompleted: boolean;
+
+  @Field(() => [String], { nullable: true, defaultValue: [] })
+  @Column({ default: [] })
+  shared_by: String[];
+
+  @Field(() => Comments, { nullable: true })
+  @Column()
+  comment: Comments[];
 }
